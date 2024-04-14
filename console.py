@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ Console Module """
+import json
 import cmd
 import sys
 from models.base_model import BaseModel
@@ -157,6 +158,12 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
         print(new_instance.id)
+        
+        # Guardar en el archivo JSON
+        with open("file.json", "a") as json_file:
+            obj_dict = new_instance.to_dict()
+            key = f"{class_name}.{obj_dict['id']}"
+            json.dump({key: obj_dict}, json_file)
 
     def help_create(self):
         """ Help information for the create method """
