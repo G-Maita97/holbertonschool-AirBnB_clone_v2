@@ -8,9 +8,21 @@ class FileStorage:
     __file_path = 'file.json'
     __objects = {}
 
-    def all(self):
-        """Returns a dictionary of models currently in storage"""
-        return FileStorage.__objects
+    def all(self, cls=None):
+        """
+        Devuelve un diccionario de objetos almacenados.
+
+        Args:
+            cls (type): Tipo de clase de los objetos a buscar. Si es None, devuelve todos los objetos.
+
+        Returns:
+            dict: Diccionario de objetos del tipo de clase especificado.
+        """
+        if cls is not None:
+            objects_of_class = {obj.id: obj for obj in self.__objects.values() if isinstance(obj, cls)}
+            return objects_of_class
+        else:
+            return self.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -24,6 +36,24 @@ class FileStorage:
             for key, val in temp.items():
                 temp[key] = val.to_dict()
             json.dump(temp, f)
+
+    def delete(self, obj=None):
+        """
+        Elimina un objeto del diccionario __objects si está presente.
+
+        Args:
+            obj (BaseModel): El objeto a eliminar. Si es None, no se realiza ninguna acción.
+        """
+        # Verifica si el objeto no es None
+        if obj is not None:
+            # Construye la clave para el objeto en el diccionario __objects
+            key = obj.__class__.__name__ + '.' + obj.id
+            # Verifica si la clave existe en el diccionario
+            if key in self.__objects:
+                # Elimina el objeto del diccionario
+                del self.__objects[key]
+                # Guarda los cambios en el archivo JSON
+                self.save()
 
     def reload(self):
         """Loads storage dictionary from file"""
