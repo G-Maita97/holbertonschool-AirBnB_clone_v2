@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -118,13 +118,45 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        # Parsear el nombre de la clase y los parámetros
+        class_name, *arg_list = args.split()
+
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+
+        # Construir los kwargs para pasar al constructor de la clase
+        kwargs = {}
+        for arg in arg_list:
+            # Separar el nombre de clave y el valor del parámetro
+            key, value = arg.split('=')
+
+            # Verificar si el valor es una cadena
+            if value.startswith('"') and value.endswith('"'):
+                # Eliminar las comillas y reemplazar los guiones bajos por espacios
+                value = value[1:-1].replace('_', ' ')
+                kwargs[key] = value
+            else:
+                try:
+                    # Intentar convertir el valor a entero
+                    kwargs[key] = int(value)
+                except ValueError:
+                    try:
+                        # Intentar convertir el valor a flotante
+                        kwargs[key] = float(value)
+                    except ValueError:
+                        # Si el valor no es ni cadena, ni entero, ni flotante, omitirlo
+                        print(f"Skipping invalid parameter: {key}={value}")
+
+        # Crear una nueva instancia de la clase con los kwargs
+        new_instance = HBNBCommand.classes[class_name](**kwargs)
+
+        # Guardar la instancia en el almacenamiento
+        storage.new(new_instance)
         storage.save()
+
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -187,7 +219,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -319,6 +351,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
