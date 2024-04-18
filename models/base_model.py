@@ -5,9 +5,12 @@ import uuid
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
-from models.engine import storage
+from models.engine.db_storage import DBStorage
+
 
 Base = declarative_base()
+storage = DBStorage()  # Crea una instancia de DBStorage
+
 
 class BaseModel:
     """Una clase base para todos los modelos de hbnb"""
@@ -65,4 +68,3 @@ class BaseModel:
         def delete(self):
             """Elimina la instancia actual del almacenamiento."""
             storage.delete(self)
-
