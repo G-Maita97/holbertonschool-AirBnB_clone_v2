@@ -9,7 +9,7 @@ app = Flask(__name__)  # instanciamos la clase Flask.
 
 @app.route("/", strict_slashes=False)  # Definir ruta sin strict_slashes=False (por defecto es True)
 def Hello_HBNB():                    # funcion atada a la ruta(un nombre de funcion solo puedes estar atada a una)
-    return "<p>Hello HBNB!</p>"        # Retorna codigo html
+    return "Hello HBNB!"        # Retorna codigo html
 
 
 if __name__ == '__main__':
