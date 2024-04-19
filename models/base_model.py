@@ -47,6 +47,7 @@ class BaseModel:
         def save(self):
             """Actualiza updated_at con la hora actual cuando se cambia la instancia y guarda según el tipo de almacenamiento"""
             self.updated_at = datetime.utcnow()
+            storage.new(self)
             storage.save()  # Guarda en el almacenamiento
 
         def __str__(self):

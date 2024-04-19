@@ -25,6 +25,7 @@ class DBStorage:
         """Inicializa una nueva instancia de DBStorage"""
         # Obtener variables de entorno para la configuración de la base de datos
         db_user = getenv('HBNB_MYSQL_USER', default='hbnb_dev')
+
         db_password = getenv('HBNB_MYSQL_PWD', default='hbnb_dev_pwd')
         db_host = getenv('HBNB_MYSQL_HOST', default='localhost')
         db_database = getenv('HBNB_MYSQL_DB', default='hbnb_dev_db')
@@ -53,8 +54,8 @@ class DBStorage:
         if cls is None:
             clases_a_consultar = [User, State, City, Amenity, Place, Review]  # Agrega más clases según sea necesario
             result = {}
-            for clase in clases_a_consultar:
-                objs = self.__session.query(clase).all()
+            for cls in clases_a_consultar:
+                objs = self.__session.query(cls).all()
                 for obj in objs:
                     key = "{}.{}".format(obj.__class__.__name__, obj.id)
                     result[key] = obj
