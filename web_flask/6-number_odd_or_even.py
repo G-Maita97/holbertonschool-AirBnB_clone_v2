@@ -64,9 +64,9 @@ def display_HTML(n):
 def display_HTML_odd_even(n):
     # verifica si es par o impar para dar parametro a la variable.
     if n % 2 == 0:
-        return render_template('6-number_odd_or_even.html', number=n, odd_even='even' )
+        return render_template('6-number_odd_or_even.html', number=n, odd_even='even')
     else:
-        return render_template('6-number_odd_or_even.html', number=n, odd_even='odd' )
+        return render_template('6-number_odd_or_even.html', number=n, odd_even='odd')
 
 
 if __name__ == '__main__':
