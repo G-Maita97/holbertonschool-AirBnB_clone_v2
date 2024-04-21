@@ -11,7 +11,6 @@ from models.city import City
 from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
-from models.engine.db_storage import DBStorage
 
 
 class DBStorage:
@@ -37,11 +36,10 @@ class DBStorage:
                                       pool_pre_ping=True)
 
         # Borrar todas las tablas si el entorno es de prueba
-        if db_env == 'test':
+        if HBNB_TYPE_STORAGE == 'test':
             Base.metadata.drop_all(self.__engine)
 
         # Crear todas las tablas de la base de datos (crear si no existen)
-        from models.base_model import Base  # Importa aquí para evitar importación circular
         Base.metadata.create_all(self.__engine)
 
         # Crear una sesión de base de datos usando sessionmaker
@@ -83,12 +81,7 @@ class DBStorage:
 
     def reload(self):
         """Recarga la sesión actual de la base de datos"""
-        from models.base_model import Base  # Importa aquí para evitar importación circular
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
-
-    def get_storage_type(self):
-        """Devuelve el tipo de almacenamiento"""
-        return 'SQLAlchemy'
